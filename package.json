@@ -1,0 +1,22 @@
+{
+  "name": "fitness-api-colletor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "async": "^2.0.1",
+    "moment": "^2.15.0",
+    "moment-timezone": "^0.5.5",
+    "mysql": "^2.11.1",
+    "sequel": "^0.3.10",
+    "squel": "^5.4.3",
+    "strava-v3": "^1.12.1",
+    "underscore": "^1.8.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Fernando Ruiz",
+  "license": "ISC"
+}
