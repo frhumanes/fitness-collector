@@ -55,6 +55,9 @@ function getUsers(err, rows, fields) {
                   .where("IdAppProveedor = ?", rows[0].id)
                   .order("last_query", true)
                   .limit(provider.LIMIT);
+  if (myArgs.length == 2){
+    query = query.where("Id_Usuario = ?", myArgs[1])
+  }
   console.log(query.toString());
 
   connection.query(query.toString(), processUsers);

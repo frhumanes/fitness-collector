@@ -13,12 +13,17 @@ npm install
 
 Se instalaran todos las dependencias
 
+# Configuración
+
+Los parámetros de conexión a la base de datos así como las Keys de las APIs se
+pueden editar en el fichero *config.js* o mediante variables de entorno.
+
 # Funcionamiento
 
 El colector se ejecuta con el siguiente comando:
 
 ```
-node indes.js [PROVIDER] [IDUSER]
+node index.js [PROVIDER] [IDUSER]
 ```
 
 siendo *PROVIDER* el nombre del proveedor de datos tal y como está guardado en

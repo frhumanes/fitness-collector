@@ -15,6 +15,28 @@ var typesTranslator = {
   'Walk': 2,
   'AlpineSki': 25,
   'BackcountrySki': 27,
+  'Caanoeing': DEFAULT, //Piraguismo
+  'Crossfit': DEFAULT,
+  'EBikeRide': DEFAULT, //Bici ELectrica
+  'Elliptical': DEFAULT,
+  'IceSkate': DEFAULT,
+  'InlineSkate': DEFAULT,
+  'Kayaking': DEFAULT,
+  'Kitesurf': DEFAULT,
+  'NordicSki': DEFAULT,
+  'RockClimb': DEFAULT,
+  'RollerSKi': DEFAULT, //Esqui sobre ruedas
+  'Rowing': DEFAULT, //remo
+  'Snowboard': DEFAULT,
+  'Snowshoe': DEFAULT, //
+  'StairStepper': DEFAULT,
+  'StandUpPaddling': DEFAULT, //Surf de remo
+  'Surfing': DEFAULT,
+  'VirtualRide': DEFAULT, //Entrenamiento Virtual
+  'WeightTraining': DEFAULT, //Pesas
+  'Windsurf': DEFAULT,
+  'Workout': DEFAULT, //Ejercicios
+  'Yoga': DEFAULT
 }
 
 function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
