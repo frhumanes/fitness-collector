@@ -40,15 +40,18 @@ var typesTranslator = {
 }
 
 function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
-  // console.log(IdUser, token, after);
+  console.log("Fetching activities for User "+ IdUser +" from " + after);
+
   strava.athlete.listActivities({'access_token':token, 'after': moment(after).unix()},function(err,payload) {
       //do something with your payload
       // console.log(err, payload)
+      var last_activity_date;
       async.each(payload, function(activity, callback){
         //console.log(activity);
+        var end_date = moment(activity.start_date).add({'seconds':activity.elapsed_time}).format('YYYY-MM-DD HH:mm:ss');
         var result = {
           Id_Usuario: IdUser,
-          IdActividad: 0,
+          IdActividad: activity.id,
           IdAppProveedor: IdAppProveedor,
           IdTipoActividad: typesTranslator[activity.type] || DEFAULT,
           Duracion: activity.moving_time,
@@ -56,8 +59,15 @@ function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
           Velocidad: activity.average_speed,
           Pasos: activity.steps || null,
           FechaInicioActividad: moment(activity.start_date).format('YYYY-MM-DD HH:mm:ss'),
-          FechaFinActividad: moment(activity.start_date).add({'seconds':activity.elapsed_time}).format('YYYY-MM-DD HH:mm:ss'),
+          FechaFinActividad: end_date,
           Raw: JSON.stringify(activity)
+        }
+        if (last_activity_date && end_date > last_activity_date){
+          last_activity_date = end_date;
+          // console.log('update', last_activity_date);
+        } else {
+          last_activity_date = end_date;
+          // console.log('set', last_activity_date);
         }
         // console.log(result);
         var data = squel.insert()
@@ -65,9 +75,11 @@ function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
         .setFields(result);
         console.log(data.toString());
 
-        conn.query(data.toString());
-        callback();
-      }, cb)
+        conn.query(data.toString(), callback);
+        //callback();
+      }, function(){
+        cb(last_activity_date);
+      })
   });
 }
 

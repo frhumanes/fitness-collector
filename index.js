@@ -15,20 +15,29 @@ connection.connect();
 
 function processUsers(err, rows, fields) {
   if (err) throw err;
-  console.info(rows.length + " users will be updated");
+  console.info(rows.length + " users will be fetched");
   async.each(rows, function(one, callback) {
-      // Send token, and last datetime to Provider handler
-      activityObject = provider.getAndStoreActivities(one.IdAppProveedor, one.Id_Usuario, one.token, one.last_query, connection, callback)
 
-      // update timestamp with last fecth (Now)
-      var query = squel.update()
-                      .table('mivfit_oauth_proveedores')
-                      .set('last_query', "CURRENT_TIMESTAMP()", {
-                          dontQuote: true
-                        })
-                      .where("idmivfit_oauth = ?", one.idmivfit_oauth);
-      console.log(query.toString());
-      connection.query(query.toString());
+      function whenEnded(last_activity_date){
+
+        // update timestamp with last activity ended database
+        if (last_activity_date) {
+            var query = squel.update()
+                            .table('mivfit_oauth_proveedores')
+                            .set('last_query', last_activity_date)
+                            .where("idmivfit_oauth = ?", one.idmivfit_oauth);
+            console.log(query.toString());
+            connection.query(query.toString(),callback);
+        } else {
+          console.log("Skipping last_query update due to no activity");
+          callback();
+        }
+      }
+
+      // Send token, and last datetime to Provider handler
+      activityObject = provider.getAndStoreActivities(one.IdAppProveedor, one.Id_Usuario, one.token, one.last_query, connection, whenEnded)
+
+
   },
   function(){
     connection.end();
