@@ -40,7 +40,7 @@ var typesTranslator = {
 }
 
 function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
-  console.log("Fetching activities for User "+ IdUser +" from " + after);
+  console.log("Fetching activities for User "+ IdUser +" from " + after, moment(after).unix());
 
   strava.athlete.listActivities({'access_token':token, 'after': moment(after).unix()},function(err,payload) {
       //do something with your payload
@@ -48,6 +48,7 @@ function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
       var last_activity_date;
       async.each(payload, function(activity, callback){
         //console.log(activity);
+        var start_date = moment(activity.start_date).format('YYYY-MM-DD HH:mm:ss');
         var end_date = moment(activity.start_date).add({'seconds':activity.elapsed_time}).format('YYYY-MM-DD HH:mm:ss');
         var result = {
           Id_Usuario: IdUser,
@@ -58,15 +59,15 @@ function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
           Distancia: activity.distance,
           Velocidad: activity.average_speed,
           Pasos: activity.steps || null,
-          FechaInicioActividad: moment(activity.start_date).format('YYYY-MM-DD HH:mm:ss'),
+          FechaInicioActividad: start_date,
           FechaFinActividad: end_date,
           Raw: JSON.stringify(activity)
         }
-        if (last_activity_date && end_date > last_activity_date){
-          last_activity_date = end_date;
+        if (last_activity_date && start_date > last_activity_date){
+          last_activity_date = start_date;
           // console.log('update', last_activity_date);
         } else {
-          last_activity_date = end_date;
+          last_activity_date = start_date;
           // console.log('set', last_activity_date);
         }
         // console.log(result);
