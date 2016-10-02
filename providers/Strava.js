@@ -39,7 +39,11 @@ var typesTranslator = {
   'Yoga': DEFAULT
 }
 
-function extractData(IdAppProveedor,IdUser, token, after, conn, cb){
+function extractData(obj, conn, cb){
+  var IdAppProveedor = obj.IdAppProveedor,
+      IdUser = obj.IdUser,
+      token = obj.token,
+      after = obj.last_query;
   console.log("Fetching activities for User "+ IdUser +" from " + after, moment(after).unix());
 
   strava.athlete.listActivities({'access_token':token, 'after': moment(after).unix()},function(err,payload) {

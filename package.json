@@ -6,6 +6,7 @@
   "dependencies": {
     "async": "^2.0.1",
     "console-stamp": "^0.2.2",
+    "fitbit-node": "^2.0.1",
     "moment": "^2.15.0",
     "moment-timezone": "^0.5.5",
     "mysql": "^2.11.1",
