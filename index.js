@@ -2,7 +2,7 @@ var squel = require("squel");
 var mysql = require('mysql');
 var _ = require('underscore');
 var async = require('async');
-
+var moment = require('moment');
 
 var config = require("./config.js");
 
@@ -21,12 +21,12 @@ function processUsers(err, rows, fields) {
       function whenEnded(last_activity_date, access_token, refresh_token){
         var update = false;
         // update timestamp with last activity ended database
+        console.log(one);
         var query = squel.update()
                         .table('mivfit_oauth_proveedores')
-
                         .where("idmivfit_oauth = ?", one.idmivfit_oauth);
         if (last_activity_date) {
-          query.set('last_query', last_activity_date)
+          query.set('last_query', moment(last_activity_date).format('YYYY-MM-DD HH:mm:ss'))
           update = true;
         }
         if (access_token) {
@@ -40,7 +40,7 @@ function processUsers(err, rows, fields) {
 
         if (update) {
           console.log(query.toString());
-          connection.query(query.toString(),callback);
+          connection.query(query.toString(), callback);
         }
         else {
           console.log("Skipping last_query update due to no activity");

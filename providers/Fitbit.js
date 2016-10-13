@@ -44,27 +44,26 @@ RESOURCE = "https://api.fitbit.com/1/user/-/activities/list.json";
 
 function extractData(obj, conn, cb){
   var IdAppProveedor = obj.IdAppProveedor,
-      IdUser = obj.IdUser,
+      IdUser = obj.Id_Usuario,
       token = obj.token,
       after = obj.last_query,
       refresh_token = obj.refresh_token;
   // Refresh token, then save it, and then get activitities
   var fitbit = new FitbitApiClient(config.fitbit.clientID, config.fitbit.clientSecret);
 
-  console.log(fitbit, token, refresh_token);
   fitbit.refreshAccesstoken(token, refresh_token).then(function(result){
     console.log(result);
     var access_token = result.access_token,
         refresh_token = result.refresh_token;
-    console.log("Fetching activities for User "+ IdUser +" from " + after, moment(after).fotmat('yyyy-MM-ddTHH:mm:ss'));
+    console.log("Fetching activities for User "+ IdUser +" from " + after, moment(after).format('YYYY-MM-DDTHH:mm:ss'));
 
-    fitbit.get("activities/list.json?afterDate+"+moment(after).fotmat('yyyy-MM-ddTHH:mm:ss'), access_token).then(
-      function(payload) {
+    fitbit.get("/activities/list.json?sort=asc&limit=20&offset=0&afterDate="+moment(after).format('YYYY-MM-DDTHH:mm:ss'), access_token).then(
+      function(result) {
         //do something with your payload
-        // console.log(err, payload)
-        var last_activity_date;
-        async.each(payload.activities, function(activity, callback){
-          //console.log(activity);
+        console.log(result[0]);
+        var last_activity_date = after;
+        async.each(result[0].activities, function(activity, callback){
+          console.log(activity);
           var start_date = moment(activity.startTime).format('YYYY-MM-DD HH:mm:ss');
           var end_date = moment(activity.startTime).add({'seconds':activity.duration}).format('YYYY-MM-DD HH:mm:ss');
           var result = {
@@ -97,10 +96,17 @@ function extractData(obj, conn, cb){
           conn.query(data.toString(), callback);
           //callback();
         }, function(){
+          console.log(last_activity_date, access_token, refresh_token);
           cb(last_activity_date, access_token, refresh_token);
         })
       }
-    );
+    ).catch(function(error){
+      console.log(error);
+      cb(after, access_token, refresh_token);
+    });
+  }).catch(function(error){
+    console.log(error.message, error.context.errors);
+    cb();
   })
 }
 
