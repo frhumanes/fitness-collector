@@ -51,7 +51,9 @@ function extractData(obj, conn, cb){
   // Refresh token, then save it, and then get activitities
   var fitbit = new FitbitApiClient(config.fitbit.clientID, config.fitbit.clientSecret);
 
-  refrreshAccessToken(token, refresh_token).then(function(result){
+  console.log(fitbit, token, refresh_token);
+  fitbit.refreshAccesstoken(token, refresh_token).then(function(result){
+    console.log(result);
     var access_token = result.access_token,
         refresh_token = result.refresh_token;
     console.log("Fetching activities for User "+ IdUser +" from " + after, moment(after).fotmat('yyyy-MM-ddTHH:mm:ss'));
