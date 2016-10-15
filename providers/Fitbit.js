@@ -5,7 +5,7 @@ var squel = require('squel');
 var moment = require('moment');
 var config = require("../config.js");
 
-var LIMIT = 600;
+var LIMIT = 0;
 
 var DEFAULT = 39; // Otros
 var typesTranslator = {

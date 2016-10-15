@@ -77,7 +77,9 @@ function getUsers(err, rows, fields) {
                   .from('mivfit_oauth_proveedores')
                   .where("IdAppProveedor = ?", rows[0].id)
                   .order("last_query", true)
-                  .limit(provider.LIMIT);
+  if (provider.LIMIT){
+    query = query.limit(provider.LIMIT);
+  }
   if (myArgs.length == 2){
     query = query.where("Id_Usuario = ?", myArgs[1])
   }
