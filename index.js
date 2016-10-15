@@ -21,7 +21,7 @@ function processUsers(err, rows, fields) {
       function whenEnded(last_activity_date, access_token, refresh_token){
         var update = false;
         // update timestamp with last activity ended database
-        console.log(one);
+        // console.log(one);
         var query = squel.update()
                         .table('mivfit_oauth_proveedores')
                         .where("idmivfit_oauth = ?", one.idmivfit_oauth);
